@@ -11,8 +11,8 @@ async function testAsync(){
 }
 
 async function test(){
-  const v1=getSomething();
-  const v2=testAsync();
+  const v1=await getSomething();
+  const v2=await testAsync();
   console.log(v1,v2);
 }
 
