@@ -18,12 +18,44 @@ app.use(async(ctx) => {
     ctx.body = html;
     // post请求
   } else if (ctx.url=== '/' && ctx.method=== 'POST') {
-    ctx.body = '接收到请求'
+    let postData = await parsePostData(ctx)
+    ctx.body = postData
   }else{
     // 其他请求
     ctx.body = '<h1>404!</h1>'
   }
 })
+function parsePostData (ctx) {
+  return new Promise((resolve, reject) => {
+    try {
+      let postData = ''
+      ctx.req.on('data',(data) => {
+        postData += data
+      })
+      ctx.req.on('end',function () {
+        let parseData = parseQueryStr(postData)
+        resolve(parseData)
+      })
+    }catch(error) {
+       reject(error)
+    }
+  })
+}
+function parseQueryStr(queryStr){
+  let queryData={};
+  console.log(queryStr)
+  let queryStrList = queryStr.split('&');
+  console.log(queryStrList);
+  console.log('ppppppppppp')
+  console.log(queryStrList.entries())
+  console.log('.............')
+  for( let [index,queryStr] of queryStrList.entries() ){
+    let itemList = queryStr.split('=');
+    console.log(itemList);
+    queryData[itemList[0]] = decodeURIComponent(itemList[1]);
+  }
+  return queryData
+}
 app.listen(3000,()=>{
   console.log('[demo] server is starting at port 3000');
 })
