@@ -7,6 +7,7 @@ function double(z) {
 
 const middlewares = [add, double]
 let len = middlewares.length
+// 中间件
 function compose(midds) {
   console.log('midds:'+midds)
    return (...args) => {
